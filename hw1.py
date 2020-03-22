@@ -70,6 +70,16 @@ def no_new_cases_count(day: int, month: int, year: int = 2020) -> int:
     :param year: Month to get the countries for as an integer indexed from 1
     :return: Number of countries/regions where the count has not changed in a day
     """
-    first = f"{month}/{day-1}/20"
-    end = f"{month}/{day}/20"
-    return confirmed_cases[["Country/Region", first, end]].groupby(["Country/Region"]).sum()
+    from datetime import datetime
+    from datetime import timedelta
+    
+    date = datetime(year, month, day)
+    previous = date - timedelta(1)
+    new_cases=0
+    _data_prev= f"{str(previous.month)}/{str(previous.day)}/{str(previous.year)[-2:]}"
+    _data = f"{str(month)}/{str(day)}/{str(year)[-2:]}"
+
+    for j in range(confirmed_cases.shape[0] - 1):
+        if (confirmed_cases.loc[j][_data_prev]) != (confirmed_cases.loc[j][_data]):
+            new_cases = new_cases + 1
+    return new_cases
