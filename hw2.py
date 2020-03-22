@@ -40,8 +40,10 @@ def countries_with_no_deaths_count(date: datetime.date) -> int:
     :return: Number of countries with no deaths but with active cases on a given date as an integer
     """
     
-    # Your code goes here
-    pass
+    deaths = dfD[["Country/Region",format_date(date)]]
+    cases = dfC[["Country/Region",format_date(date)]]
+    comp = pd.concat([deaths[format_date(date)], cases[format_date(date)]], axis=1, keys=("deaths","cases"))
+    return len(comp[(comp["deaths"]==0) & (comp["cases"]>0)].index)
 
 
 def more_cured_than_deaths_indices(date: datetime.date) -> List[int]:
@@ -65,5 +67,7 @@ def more_cured_than_deaths_indices(date: datetime.date) -> List[int]:
     :return: A List of integers containing indices of countries which had more cured cases than deaths on a given date
     """
     
-    # Your code goes here
-    pass
+    deaths = dfD[["Country/Region",format_date(date)]]
+    recd = dfR[["Country/Region",format_date(date)]]
+    comp = pd.concat([deaths[format_date(date)], recd[format_date(date)]], axis=1, keys=("deaths","recovered"))
+    return list(comp[(comp["deaths"] < comp["recovered"])].index)
