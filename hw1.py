@@ -47,9 +47,11 @@ def top5_countries_by_date(day: int, month: int, year: int = 2020) -> List[str]:
     :param year: Month to get the countries for as an integer indexed from 1
     :return: A list of strings with the names of the coutires
     """
-
-    result = confirmed_cases.groupby(by=["Country/Region"]).sum().sort_values(by=[f"{month}/{day}/{year-2000}"], ascending=False).head(5)
-    return list(result.index)
+    
+    url = f"https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
+    df = pd.read_csv(url, error_bad_lines=False)
+    date = str.format("{}/{}/20", month, day)
+    return list(df[["Country/Region", date]].groupby(["Country/Region"]).sum().sort_values(by=date, ascending=False).head(5).index)
     
 
 
