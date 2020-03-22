@@ -70,5 +70,6 @@ def no_new_cases_count(day: int, month: int, year: int = 2020) -> int:
     :param year: Month to get the countries for as an integer indexed from 1
     :return: Number of countries/regions where the count has not changed in a day
     """
-    
-    return confirmed_cases[["Country/Region", f"{month}/{day-1}/20", f"{month}/{day}/20"]].groupby(["Country/Region"]).sum()
+    first = f"{month}/{day-1}/20"
+    end = f"{month}/{day}/20"
+    return confirmed_cases[["Country/Region", first, end]].groupby(["Country/Region"]).sum()
